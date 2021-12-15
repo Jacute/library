@@ -1,2 +1,2 @@
 heroku buildpacks:set heroku/python
-web: export FLASK_app=main.py && python3 -m flask run --host==0.0.0.0 --cert=adhoc
+web: python3 main.py
