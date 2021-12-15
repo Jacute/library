@@ -12,4 +12,4 @@ def main():
 
 if __name__ == '__main__':
     # db_session.global_init("db/data.sqlite")
-    app.run(debug=False, port=5000)
+    app.run(debug=False)
