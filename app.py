@@ -34,7 +34,8 @@ def main():
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
                     req.lower() in i[4].lower():
                 result.append(i[1:4])
-        response['response']['text'] = '\n'.join([' '.join(i) for i in result])
+        # response['response']['text'] = '\n'.join([' '.join(i) for i in result])
+        response['response']['text'] = '1'
         cur.close()
         conn.close()
     return json.dumps(response)
