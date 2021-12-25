@@ -33,7 +33,7 @@ def main():
         for i in records:
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
                     req.lower() in i[4].lower():
-                result.append(i[1:3])
+                result.append([i[1], i[2], str(i[3])])
         if result:
             response['response']['text'] = '\n'.join([' '.join(i) for i in result])
         else:
