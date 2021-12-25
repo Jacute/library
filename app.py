@@ -33,12 +33,9 @@ def main():
         for i in records:
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
                     req.lower() in i[4].lower():
-                result.append(i[1:4])
+                result.append(i[1:3])
         if result:
-            res = ''
-            for i in result:
-                res += ' '.join(i)
-            response['response']['text'] = res
+            response['response']['text'] = '\n'.join([' '.join(i) for i in result])
         else:
             response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
                                            ' Попробуйте ещё раз.'
