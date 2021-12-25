@@ -24,18 +24,17 @@ def main():
                                        ' по которому ты хочешь найти книги,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
     else:
-        req = request.json['request']['original_utterance'].lower()
+        req = request.json['request']['original_utterance']
         conn = sqlite3.connect('db.db')
         cur = conn.cursor()
         cur.execute("""SELECT * from library""")
         records = cur.fetchall()
         result = []
         for i in records:
-            if req in i[1].lower() or req in i[2].lower() or\
-                    req in i[4].lower():
+            if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
+                    req.lower() in i[4].lower():
                 result.append(i[1:4])
-        res = '\n'.join([' '.join(i) for i in result])
-        response['response']['text'] = res
+        response['response']['text'] = '\n'.join([' '.join(i) for i in result])
         cur.close()
         conn.close()
     return json.dumps(response)
