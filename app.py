@@ -40,7 +40,7 @@ def main():
                 result.append([i[1], i[2], str(i[3])])
         if result:
             res = '\n'.join([' '.join(i) for i in result])
-            response['response']['text'] = res if len(res) <= 1024 else res[:1022] + '...'
+            response['response']['text'] = res if len(res) <= 1024 else res[:1021] + '...'
         else:
             response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
                                            ' Попробуйте ещё раз.'
