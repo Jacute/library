@@ -35,7 +35,10 @@ def main():
                     req.lower() in i[4].lower():
                 result.append(i[1:4])
         if result:
-            response['response']['text'] = result
+            res = ''
+            for i in result:
+                res += ' '.join(i) + '\n'
+            response['response']['text'] = res
         else:
             response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
                                            ' Попробуйте ещё раз.'
