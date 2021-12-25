@@ -34,7 +34,11 @@ def main():
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
                     req.lower() in i[4].lower():
                 result.append(i[1:4])
-        response['response']['text'] = '\n'.join([' '.join(i) for i in result])
+        if result:
+            response['response']['text'] = [' '.join(i) for i in result]
+        else:
+            response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
+                                           ' Попробуйте ещё раз.'
         cur.close()
         conn.close()
     return json.dumps(response)
