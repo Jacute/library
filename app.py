@@ -23,6 +23,10 @@ def main():
         response['response']['text'] = 'Привет! Отправь мне ключевое слово,' \
                                        ' по которому ты хочешь найти книги,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
+    elif request.json['request']['original_utterance'] == 'Помощь' or \
+            request.json['request']['original_utterance'] == 'Что ты умеешь?':
+        response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
+                                       ' а я выведу список всех доступных произведений из библиотеки.'
     else:
         req = request.json['request']['original_utterance']
         conn = sqlite3.connect('db.db')
