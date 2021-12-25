@@ -37,7 +37,7 @@ def main():
         if result:
             res = ''
             for i in result:
-                res += ' '.join(i) + '\n'
+                res += ' '.join(i)
             response['response']['text'] = res
         else:
             response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
