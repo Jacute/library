@@ -39,7 +39,8 @@ def main():
                     req.lower() in i[4].lower():
                 result.append([i[1], i[2], str(i[3])])
         if result:
-            response['response']['text'] = '\n'.join([' '.join(i) for i in result])
+            res = '\n'.join([' '.join(i) for i in result])
+            response['response']['text'] = res if len(res) <= 1024 else res[:1022] + '...'
         else:
             response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
                                            ' Попробуйте ещё раз.'
