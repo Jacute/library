@@ -38,7 +38,7 @@ def main():
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
                     req.lower() in i[4].lower():
                 result.append([i[1], i[2], str(i[3])])
-        if result:
+        if result and len(req) >= 3 and not req.isnumeric():
             res = '\n'.join([' '.join(i) for i in result])
             response['response']['text'] = res if len(res) <= 1024 else res[:1021] + '...'
         else:
