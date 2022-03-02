@@ -1,7 +1,8 @@
 import json
-
+import sqlite3
 from flask import Flask, request
 import logging
+import re
 
 
 app = Flask(__name__)
@@ -19,11 +20,37 @@ def main():
         }
     }
 
+    s = request.json['request']['original_utterance']
+
     if request.json['session']['new']:
         response['response']['text'] = 'Привет! Отправь мне ключевое слово,' \
                                        ' по которому ты хочешь найти книги,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
-
+    elif s == 'Помощь' or s == 'Что ты умеешь?':
+        response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
+                                       ' а я выведу список всех доступных произведений из библиотеки.'
+    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', s):
+        try:
+            add_in_db
+    else:
+        req = request.json['request']['original_utterance']
+        conn = sqlite3.connect('db.db')
+        cur = conn.cursor()
+        cur.execute("""SELECT * from library""")
+        records = cur.fetchall()
+        result = []
+        for i in records:
+            if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
+                    req.lower() in i[4].lower():
+                result.append([i[1], i[2], str(i[3])])
+        if result and len(req) >= 3:
+            res = '\n'.join([' '.join(i) for i in result])
+            response['response']['text'] = res if len(res) <= 1024 else res[:1021] + '...'
+        else:
+            response['response']['text'] = 'Извините, по данному запросу произведения не найдены.' \
+                                           ' Попробуйте ещё раз.'
+        cur.close()
+        conn.close()
     return json.dumps(response)
 
 
