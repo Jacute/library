@@ -2,6 +2,7 @@ import json
 import sqlite3
 from flask import Flask, request
 import logging
+import re
 
 
 app = Flask(__name__)
@@ -27,6 +28,8 @@ def main():
             request.json['request']['original_utterance'] == 'Что ты умеешь?':
         response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
+    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', request.json['request']['original_utterance']):
+        response['response']['text'] = '123'
     else:
         req = request.json['request']['original_utterance']
         conn = sqlite3.connect('db.db')
