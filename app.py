@@ -32,7 +32,11 @@ def main():
     elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', req):
         a = re.findall('[^;]+', req)
         name, author, number, keywords = a[0][10:], a[1], a[2], a[3]
-        add_in_db(name, author, number, keywords)
+        try:
+            add_in_db(name, author, number, keywords)
+            response['response']['text'] = 'Ваша запись была успешно добавлена в библиотеку!'
+        except Exception:
+            response['response']['text'] = 'Что-то пошло не так! Попробуйте ещё раз...'
     else:
         if req.isnumeric():
             req = str(req)
