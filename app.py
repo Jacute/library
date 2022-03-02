@@ -1,6 +1,7 @@
 import json
 import sqlite3
 from flask import Flask, request
+from add_in_db import add_in_db
 import logging
 import re
 
@@ -19,19 +20,20 @@ def main():
             'end_session': False
         }
     }
-
+    req = request.json['request']['original_utterance']
     if request.json['session']['new']:
         response['response']['text'] = 'Привет! Отправь мне ключевое слово,' \
                                        ' по которому ты хочешь найти книги,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
-    elif request.json['request']['original_utterance'] == 'Помощь' or \
-            request.json['request']['original_utterance'] == 'Что ты умеешь?':
+    elif req == 'Помощь' or \
+            req == 'Что ты умеешь?':
         response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
-    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', request.json['request']['original_utterance']):
-        response['response']['text'] = '123'
+    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', req):
+        a = re.findall('[^;]+', req)
+        name, author, number, keywords = a[0][10:], a[1], a[2], a[3]
+        add_in_db(name, author, number, keywords)
     else:
-        req = request.json['request']['original_utterance']
         if req.isnumeric():
             req = str(req)
         conn = sqlite3.connect('db.db')
