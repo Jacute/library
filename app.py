@@ -32,6 +32,8 @@ def main():
         response['response']['text'] = '123'
     else:
         req = request.json['request']['original_utterance']
+        if req.isnumeric():
+            req = str(req)
         conn = sqlite3.connect('db.db')
         cur = conn.cursor()
         cur.execute("""SELECT * from library""")
@@ -39,9 +41,9 @@ def main():
         result = []
         for i in records:
             if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
-                    req.lower() in i[4].lower():
+                    req.lower() in i[4].lower() or req == str(i[3]):
                 result.append([i[1], i[2], str(i[3])])
-        if result and len(req) >= 3 and not req.isnumeric():
+        if result and len(req) >= 3:
             res = '\n'.join([' '.join(i) for i in result])
             response['response']['text'] = res if len(res) <= 1024 else res[:1021] + '...'
         else:
