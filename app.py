@@ -30,20 +30,18 @@ def main():
         response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
     elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', s):
-        try:
-            add_in_db
+        response['response']['text'] = '123'
     else:
-        req = request.json['request']['original_utterance']
         conn = sqlite3.connect('db.db')
         cur = conn.cursor()
         cur.execute("""SELECT * from library""")
         records = cur.fetchall()
         result = []
         for i in records:
-            if req.lower() in i[1].lower() or req.lower() in i[2].lower() or\
-                    req.lower() in i[4].lower():
+            if s.lower() in i[1].lower() or s.lower() in i[2].lower() or\
+                    s.lower() in i[4].lower():
                 result.append([i[1], i[2], str(i[3])])
-        if result and len(req) >= 3:
+        if result and len(s) >= 3 and not s.isnumeric():
             res = '\n'.join([' '.join(i) for i in result])
             response['response']['text'] = res if len(res) <= 1024 else res[:1021] + '...'
         else:
