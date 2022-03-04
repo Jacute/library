@@ -41,7 +41,7 @@ def main():
                                        'Приятного пользования! ;)'
     elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', req) or re.match(r'\+ "[^;]+;[^;]+;\d+;[^;]+"', req):
         a = re.findall('[^;]+', req)
-        name, author, number, keywords = a[0][10:], a[1], a[2], a[3]
+        name, author, number, keywords = a[0][10:], a[1], int(a[2]), a[3][:-1]
         try:
             f_code = add_in_db(name, author, number, keywords)
             if f_code:
@@ -52,7 +52,7 @@ def main():
             response['response']['text'] = 'Что-то пошло не так! Попробуйте ещё раз...'
     elif re.match(r'Удалить "\d+"', req) or re.match(r'- "\d+"', req):
         a = re.findall('[^;]+', req)
-        number = a[2]
+        number = int(a[2])
         try:
             f_code = delete_from_db(number)
             if f_code:
