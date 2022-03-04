@@ -1,7 +1,7 @@
 import json
 import sqlite3
 from flask import Flask, request
-from add_in_db import add_in_db
+from db_func import add_in_db, delete_from_db
 import logging
 import re
 
@@ -29,12 +29,26 @@ def main():
             req == 'Что ты умеешь?':
         response['response']['text'] = 'Я ищу книги из библиотеки по ключевым словам. Отправь мне его,' \
                                        ' а я выведу список всех доступных произведений из библиотеки.'
-    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', req):
+    elif re.match(r'Добавить "[^;]+;[^;]+;\d+;[^;]+"', req) or re.match(r'\+ "[^;]+;[^;]+;\d+;[^;]+"', req):
         a = re.findall('[^;]+', req)
         name, author, number, keywords = a[0][10:], a[1], a[2], a[3]
         try:
-            add_in_db(name, author, number, keywords)
-            response['response']['text'] = 'Ваша запись была успешно добавлена в библиотеку!'
+            f_code = add_in_db(name, author, number, keywords)
+            if f_code:
+                response['response']['text'] = 'Ваша запись была успешно добавлена в библиотеку!'
+            else:
+                response['response']['text'] = 'Запись с таким же номером уже существует'
+        except Exception:
+            response['response']['text'] = 'Что-то пошло не так! Попробуйте ещё раз...'
+    elif re.match(r'Удалить "\d+"', req) or re.match(r'- "\d+"', req):
+        a = re.findall('[^;]+', req)
+        number = a[2]
+        try:
+            f_code = delete_from_db(number)
+            if f_code:
+                response['response']['text'] = 'Ваша запись была успешно удалена из библиотеки!'
+            else:
+                response['response']['text'] = 'Запись с таким же номером отсутствует'
         except Exception:
             response['response']['text'] = 'Что-то пошло не так! Попробуйте ещё раз...'
     else:
