@@ -32,3 +32,7 @@ def delete_from_db(number):
     cur.close()
     conn.close()
     return 1
+
+
+if __name__ == '__main__':
+    delete_from_db(13)
